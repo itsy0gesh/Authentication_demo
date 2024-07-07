@@ -11,8 +11,8 @@ const {PORT , MONGO_URL} = process.env;
 // * MIDDLEWARE
 app.use(morgan('dev'));
 app.use(cors({
-    origin:"http://localhost:5416",
-    credentials:true
+    origin: ["http://localhost:5173","http://localhost:5416", "http://localhost:5000"],
+    credentials:true,
 }));
 app.use(express.json()); 
 

@@ -4,7 +4,6 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
 function App() {
   return (
     <div className="h-screen bg-gray-800 text-white flex flex-col">

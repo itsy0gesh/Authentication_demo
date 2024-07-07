@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { usePasswordvalidate } from "../hooks/usePasswordvalidate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Eyeclose from "../components/Eyeclose";
 import Eyeopen from "../components/Eyeopen";
+import {useDispatch} from 'react-redux';
+import axios from "axios";
+import { setUsername } from "../Redux/slices/navSlice";
 
 function Login() {
   const [eye, setEye] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [data, setData] = useState({
     email: "",
@@ -13,14 +18,10 @@ function Login() {
     error: "",
   });
 
-  const [
-    validEmail,
-  ] = usePasswordvalidate({
+  const [validEmail] = usePasswordvalidate({
     password: data.password,
     email: data.email,
-    confirmpass: data.confirmPassword,
   });
- 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,18 +31,58 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!data.email ||!data.password ) {
-      setData(prevData => ({...prevData, error: "Enter required fields" }));
+    if (!data.email || !data.password) {
+      setData((prevData) => ({ ...prevData, error: "Enter required fields" }));
       return;
     }
     if (!validEmail) {
       setData((pre) => ({ ...pre, error: "email not valid" }));
       return;
     }
-    console.log("done");
-    setData(data=>({...data,error:""}));
+    try {
+      const response = await axios.post(
+        "http://localhost:5416/api/user/login",
+        { email: data.email, password: data.password },
+        { withCredentials: true }
+      );
+      resetForm();
+      dispatch(setUsername(response.data.username));
+      alert("login successful");
+      navigate("/");
+    } catch (error) {
+      handleErr(error);
+    }
+  };
+
+  const resetForm = () => {
+    setData({
+      email: "",
+      password: "",
+      error: "",
+    });
+  };
+
+  const handleErr = (error) => {
+    let errMessage = "and error occurred";
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:
+          errMessage = "enter required fields";
+          break;
+        case 401:
+          errMessage = "Invalid user!";
+          break;
+        default:
+          errMessage = "something went wrong!";
+      }
+    }
+    setError(errMessage);
+  };
+
+  const setError = (message) => {
+    setData((pre) => ({ ...pre, error: message }));
   };
 
   return (

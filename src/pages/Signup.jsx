@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { usePasswordvalidate } from "../hooks/usePasswordvalidate";
+import axios from "axios";
 import Tick from "../components/Tick";
 import Cross from "../components/Cross";
 import Eyeclose from "../components/Eyeclose";
 import Eyeopen from "../components/Eyeopen";
 
 function Signup() {
-
-  const [eye,setEye] =useState(false);
-  const navigate= useNavigate();
+  const [eye, setEye] = useState(false);
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     email: "",
@@ -40,20 +40,48 @@ function Signup() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
-    if (!data.email ||!data.password ||!data.confirmPassword || !validEmail) {
-      setData(prevData => ({...prevData, error: "Enter required fields" }));
+    if (!data.email || !data.password || !data.confirmPassword || !validEmail) {
+      setData((prevData) => ({ ...prevData, error: "Enter required fields" }));
       return;
     }
     if (!confirm) {
-      setData(prevData => ({...prevData, error: "Passwords didn't match" }));
-      return; 
+      setData((prevData) => ({ ...prevData, error: "Passwords didn't match" }));
+      return;
     }
-    
-    console.log("all good");
-    setData(data=>({...data,error:""}));
-    navigate('/');
+    try {
+      const response = await axios.post("http://localhost:5416/api/user/", {
+        email: data.email,
+        password: data.password,
+        confirmpassword: data.confirmPassword,
+      });
+      alert("account created");
+      setData({
+        email: "",
+        password: "",
+        confirmPassword: "",
+        error: "",
+      });
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 400) {
+          setData((prevData) => ({...prevData,error: "enter required fields",}));
+        } else if (error.response.status == 401) {
+          setData((prevData) => ({ ...prevData, error: "already a user" }));
+        } else if (error.response.status === 402) {
+          setData((prevData) => ({ ...prevData, error: "Passwords mismatch" }));
+        } else {
+          setData((prevData) => ({ ...prevData, error: "something wrong" }));
+        }
+      } else {
+        setData((prevData) => ({ ...prevData, error: "an error occurred" }));
+      }
+    }
+
+    // console.log("all good");
+    // setData(data=>({...data,error:""}));
+    // navigate('/');
   };
 
   return (
@@ -90,7 +118,9 @@ function Signup() {
             autoComplete="off"
           />
           <div className="absolute gap-1  right-1 flex">
-            <span onClick={()=>setEye(eye=>!eye)}>{eye ? <Eyeopen/> : <Eyeclose />}</span>
+            <span onClick={() => setEye((eye) => !eye)}>
+              {eye ? <Eyeopen /> : <Eyeclose />}
+            </span>
             {validLength &&
               hasNumber &&
               uppercase &&

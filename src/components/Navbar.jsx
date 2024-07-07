@@ -1,13 +1,28 @@
 import React from "react";
+import Loginbtn from './Loginbtn';
 import { NavLink } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 function Navbar() {
+  const tabs = useSelector((state) => state.navbar.tabs);
+  const username = useSelector((state)=> state.navbar.username);
+
   return (
     <nav className="relative flex h-[10%] bg-slate-600">
-        <NavLink to="" className="flex-1 ml-16 self-center text-white underline">Auth</NavLink>
-      {/* <p className="flex-1 self-center">create</p> */}
-        <NavLink to="/login" className="self-center h-12 text-white mr-16 px-6 py-3 hover:bg-blue-600 rounded-xl">login</NavLink>
-      
+      <NavLink to="" className="flex-1 ml-16 self-center text-white underline">
+        Auth
+      </NavLink>
+      <div className="flex-1 flex gap-3 items-center justify-end">
+        {tabs.map((tab, index) => (
+          <NavLink
+            key={index}
+            to={`/${tab.toLowerCase().replace(/\s+/g, "-")}`}
+            className="   text-white p-3 "
+          >
+            {tab}
+          </NavLink>
+        ))}
+        {username ? <span className="text-white mr-16">{username}</span> : <Loginbtn/> }
+      </div>
     </nav>
   );
 }
