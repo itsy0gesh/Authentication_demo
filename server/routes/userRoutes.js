@@ -4,6 +4,7 @@ import { createUser } from "../controllers/userController.js";
 const userRoutes = express.Router();
 
 userRoutes.route("/")
-    .post(createUser);
+    .post(createUser)
+    .post(authenticateUser);
 
 export default userRoutes;

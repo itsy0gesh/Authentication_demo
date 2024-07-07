@@ -28,3 +28,8 @@ export const createUser = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+export const authenticateUser = catchAsync(async (req,res,next)=>{
+  
+  next();
+});
