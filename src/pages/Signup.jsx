@@ -40,7 +40,7 @@ function Signup() {
     }));
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!data.email || !data.password || !data.confirmPassword || !validEmail) {
       setData((prevData) => ({ ...prevData, error: "Enter required fields" }));
@@ -66,7 +66,10 @@ function Signup() {
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
-          setData((prevData) => ({...prevData,error: "enter required fields",}));
+          setData((prevData) => ({
+            ...prevData,
+            error: "enter required fields",
+          }));
         } else if (error.response.status == 401) {
           setData((prevData) => ({ ...prevData, error: "already a user" }));
         } else if (error.response.status === 402) {

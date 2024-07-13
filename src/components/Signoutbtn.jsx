@@ -1,15 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-function Loginbtn() {
+function Signoutbtn() {
   return (
     <NavLink
-      to="/login"
+      to="/"
       className="  text-white mr-12 px-6 py-3 hover:bg-blue-600 rounded-xl"
     >
-      login
+      Sign out
     </NavLink>
   );
 }
 
-export default Loginbtn;
+export default Signoutbtn;

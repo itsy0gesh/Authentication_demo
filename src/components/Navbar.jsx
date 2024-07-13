@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 function Navbar() {
   const tabs = useSelector((state) => state.navbar.tabs);
-  const username = useSelector((state)=> state.navbar.username);
+  const username = useSelector((state)=> state.profile.username);
 
   return (
     <nav className="relative flex h-[10%] bg-slate-600">
@@ -21,7 +21,7 @@ function Navbar() {
             {tab}
           </NavLink>
         ))}
-        {username ? <span className="text-white mr-16">{username}</span> : <Loginbtn/> }
+        {username ? <NavLink to="/profile" className="text-white mr-12 rounded-md border p-2"><span>{username}</span></NavLink> : <Loginbtn/> }
       </div>
     </nav>
   );

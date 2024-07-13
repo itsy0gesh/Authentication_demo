@@ -5,7 +5,7 @@ import Eyeclose from "../components/Eyeclose";
 import Eyeopen from "../components/Eyeopen";
 import {useDispatch} from 'react-redux';
 import axios from "axios";
-import { setUsername } from "../Redux/slices/navSlice";
+import { setProfile } from "../Redux/slices/profileSlice";
 
 function Login() {
   const [eye, setEye] = useState(false);
@@ -47,8 +47,9 @@ function Login() {
         { email: data.email, password: data.password },
         { withCredentials: true }
       );
+      const {username,email} =response.data;
+      dispatch(setProfile({username:username,email:email}));
       resetForm();
-      dispatch(setUsername(response.data.username));
       alert("login successful");
       navigate("/");
     } catch (error) {

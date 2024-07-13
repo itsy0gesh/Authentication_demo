@@ -35,7 +35,7 @@ const signToken = (id) => {
     });
   });
 
-export const authenticateUser = catchAsync(async (req, res, next) => {
+export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) return res.status(400).send("provide info");
@@ -52,6 +52,10 @@ export const authenticateUser = catchAsync(async (req, res, next) => {
   res.status(201).json({
     status: "success",
     username: user.username,
+    email: user.email,
   });
   next();
 });
+
+
+
