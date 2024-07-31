@@ -4,36 +4,42 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import "dotenv/config";
 
-const signToken = (id) => {
-  return jwt.sign({ id: id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
-  });
+const signToken = (id,username,email,role) => {
+  return jwt.sign(
+    { id: id.toString(), username: username, email: email ,role:role},
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES,
+    }
+  );
 };
 
-  export const createUser = catchAsync(async (req, res, next) => {
-    const { email , password ,confirmpassword} = req.body;
+export const createUser = catchAsync(async (req, res, next) => {
+  const { email, password, confirmpassword } = req.body;
 
-    if (!email || !password || !confirmpassword)return res.status(400).send("provide info");
+  if (!email || !password || !confirmpassword)
+    return res.status(400).send("provide info");
 
-    const existingUser = await userModel.findOne({ email });
-    if (existingUser)return res.status(401).send("already a user");
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) return res.status(401).send("already a user");
 
-    if (password !== confirmpassword)return res.status(402).send("password mismatch");
-    
-    const name = email.substring(0, email.indexOf("@"));
-    const newUser = await userModel.create({
-      username: name,
-      email: email,
-      password: password,
-    });
+  if (password !== confirmpassword)
+    return res.status(402).send("password mismatch");
 
-    const jwtToken = signToken(newUser._id);
-    res.cookie('jwt',jwtToken);
-
-    res.status(201).json({
-      status: "success",
-    });
+  const name = email.substring(0, email.indexOf("@"));
+  const newUser = await userModel.create({
+    username: name,
+    email: email,
+    password: password,
   });
+
+  const jwtToken = signToken(newUser._id, newUser.username, newUser.email,newUser.role);
+  res.cookie("authToken", jwtToken, { secure: true });
+
+  res.status(201).json({
+    status: "success",
+  });
+});
 
 export const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
@@ -46,8 +52,8 @@ export const login = catchAsync(async (req, res, next) => {
     return next(res.status(401).send("invalid user"));
   }
 
-  const jwtToken = signToken(user._id);
-  res.cookie("jwt", jwtToken);
+  const jwtToken = signToken(user._id,user.username,user.email,user.role);
+  res.cookie("authToken", jwtToken,{secure:true});
 
   res.status(201).json({
     status: "success",
@@ -58,4 +64,10 @@ export const login = catchAsync(async (req, res, next) => {
 });
 
 
-
+// export const jwtData = catchAsync(async ()=>{
+//   const token="jwtToken";
+//   const decodedJwt = await jwt.verify(token,process.env.JWT_SECRET);
+//   console.log(decodedJwt.email);
+//   res.
+//   next();
+// });

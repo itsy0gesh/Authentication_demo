@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Loader from "../components/Loader";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import jwtData from '../hooks/jwtData'
 
 function Profile() {
-  const name = useSelector((state) => state.profile.username);
-  const email = useSelector((state) => state.profile.email);
+  const { username, email, status, error } = useSelector(
+    (state) => state.profile
+  );
+  useEffect(()=>{
+    const data=jwtData();
+  },[])
+
   return (
-    <div className="flex justify-center items-center h-full">
+    <div className="flex-1 flex justify-center items-center h-full">
       <div>
-        <p>name : {name}</p>
-        <p>email : {email}</p>
+        <p>{username}</p>
+        <p>{email}</p>
       </div>
     </div>
   );

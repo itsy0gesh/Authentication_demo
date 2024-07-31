@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 function Navbar() {
   const tabs = useSelector((state) => state.navbar.tabs);
   const username = useSelector((state)=> state.profile.username);
-
   return (
     <nav className="relative flex h-[10%] bg-slate-600">
       <NavLink to="" className="flex-1 ml-16 self-center text-white underline">
