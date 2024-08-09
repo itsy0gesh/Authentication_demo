@@ -96,7 +96,7 @@ function Login() {
       >
         <label htmlFor="email">username</label>
         <input
-          type="text"
+          type="email"
           id="email"
           name="email"
           value={data.email}
