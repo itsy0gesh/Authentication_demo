@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import "dotenv/config";
 
-const signToken = (id,username,email,role) => {
+const signToken = (id, username, email, role) => {
   return jwt.sign(
-    { id: id.toString(), username: username, email: email ,role:role},
+    { id: id.toString(), username: username, email: email, role: role },
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRES,
@@ -33,7 +33,12 @@ export const createUser = catchAsync(async (req, res, next) => {
     password: password,
   });
 
-  const jwtToken = signToken(newUser._id, newUser.username, newUser.email,newUser.role);
+  const jwtToken = signToken(
+    newUser._id,
+    newUser.username,
+    newUser.email,
+    newUser.role
+  );
   res.cookie("authToken", jwtToken, { secure: true });
 
   res.status(201).json({
@@ -52,8 +57,8 @@ export const login = catchAsync(async (req, res, next) => {
     return next(res.status(401).send("invalid user"));
   }
 
-  const jwtToken = signToken(user._id,user.username,user.email,user.role);
-  res.cookie("authToken", jwtToken,{secure:true});
+  const jwtToken = signToken(user._id, user.username, user.email, user.role);
+  res.cookie("authToken", jwtToken, { secure: true });
 
   res.status(201).json({
     status: "success",
@@ -62,7 +67,6 @@ export const login = catchAsync(async (req, res, next) => {
   });
   next();
 });
-
 
 // export const jwtData = catchAsync(async ()=>{
 //   const token="jwtToken";

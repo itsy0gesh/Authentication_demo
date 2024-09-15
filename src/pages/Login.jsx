@@ -45,7 +45,7 @@ function Login() {
       const response = await axios.post(
         "http://localhost:5416/api/user/login",
         { email: data.email, password: data.password },
-        { withCredentials: true }
+        { withCredentials: true }                  
       );
       const {username,email} =response.data;
       dispatch(setProfile({username:username,email:email}));

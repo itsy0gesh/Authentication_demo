@@ -6,7 +6,7 @@ const data = new mongoose.Schema(
       type: String,
       required: [true, "please tell ur name"],
     },
-    email: {
+    email: {  
       type: String,
       lowercase: true,
       required: [true, "please tell ur email"],
